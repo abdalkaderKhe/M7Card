@@ -8,6 +8,7 @@ class StartEvent extends LoginEvent{}
 class LoginButtonPressEvent extends LoginEvent{
   String email;
   String password;
-  LoginButtonPressEvent({required this.email, required this.password});
+  String token;
+  LoginButtonPressEvent({required this.email, required this.password,required this.token,});
 }
 

@@ -5,6 +5,7 @@ import 'package:m7card/ui/home/orders_list_page.dart';
 import 'package:m7card/ui/home/quick_buy_page.dart';
 import 'package:m7card/ui/home/search_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../authentication/signin/signin_email_or_phone_page.dart';
 import 'economize_page.dart';
 import 'home.dart';
 class BottomNavBar extends StatefulWidget {
@@ -16,20 +17,21 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
 
   final Color _activeColor = const Color.fromRGBO(99, 91, 255, 1);
-  int currentIndex = 4;
+  int currentIndex = 3;
 
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
   }
 
 
   final screens = [
-    const EconomizePage(),
-    const OrdersListPage(),
-    const QuickBuy(),
-    const SearchPage(),
-    const Home(),
+     EconomizePage(),
+     OrdersListPage(),
+    //const QuickBuy(),
+     SearchPage(),
+     Home(),
   ];
 
 
@@ -52,7 +54,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         items: [
           BottomNavigationBarItem(icon:const Icon(CupertinoIcons.profile_circled),label: "الملف الشخصي",backgroundColor: _activeColor,),
           BottomNavigationBarItem(icon:const Icon(FontAwesomeIcons.tag),label: "طلباتي",backgroundColor: _activeColor),
-          BottomNavigationBarItem(icon:const Icon(Icons.bolt,color: Colors.amber,),label: "الشراء السريع",backgroundColor: _activeColor),
+          //BottomNavigationBarItem(icon:const Icon(Icons.bolt,color: Colors.amber,),label: "الشراء السريع",backgroundColor: _activeColor),
           BottomNavigationBarItem(icon:const Icon(Icons.search),label: "البحث",backgroundColor: _activeColor),
           BottomNavigationBarItem(icon:const Icon(Icons.home),label: "الرئيسية",backgroundColor: _activeColor),
         ],

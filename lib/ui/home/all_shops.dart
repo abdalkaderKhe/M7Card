@@ -160,11 +160,13 @@ class _AllShopsState extends State<AllShops> {
         color: Colors.white,
         child: GestureDetector(
           onTap:() {
+            /*
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) =>  ProductByShopDetailPage(),
+                builder: (context) =>  ProductByShopDetailPage(shopModel: null,),
               ),
             );
+             */
           },
           behavior: HitTestBehavior.translucent,
           child: Column(

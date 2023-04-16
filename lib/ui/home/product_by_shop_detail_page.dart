@@ -1,33 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:m7card/ui/home/product_detail_page.dart';
 import 'package:m7card/ui/widgets/backgroud_color.dart';
 import 'package:m7card/ui/widgets/custom_drawer.dart';
+
+import '../../bloc/category/all_category/all_category_bloc.dart';
+import '../../bloc/shop/products_by_shop/products_by_shop_bloc.dart';
+import '../../config/constants.dart';
+import '../../model/product_by_shop.dart';
+import '../../model/product_by_shop_model.dart';
+import '../../model/shop.dart';
+import '../widgets/category_card_item.dart';
+import 'category_page.dart';
 class ProductByShopDetailPage extends StatefulWidget {
-  const ProductByShopDetailPage({Key? key}) : super(key: key);
+  Shop shopModel;
+  ProductByShopDetailPage({Key? key,required this.shopModel}) : super(key: key);
   @override
   State<ProductByShopDetailPage> createState() => _ProductByShopDetailPageState();
 }
 
 class _ProductByShopDetailPageState extends State<ProductByShopDetailPage> {
-  bool _isLove = false;
-  final _buttonColor = const Color.fromRGBO(155, 149, 239, 1);
+  List<ProductByShopModel> productByShopData = [];
+  late ProductsByShopBloc _productByShopBloc;
+  bool _lastProductByShopCategory = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _productByShopBloc = BlocProvider.of<ProductsByShopBloc>(context);
+    _productByShopBloc.add(GetProductsByShop(proudctID: 1));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      backgroundColor:Colors.white,
+      backgroundColor:Colors.grey.shade100,
       endDrawer: const CustomDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-         /*
-        leading: const Padding(
-          padding:  EdgeInsets.all(9.0),
-          child:  CircleAvatar(backgroundColor: Color.fromRGBO(229, 232, 239, 1),radius: 13,child: Icon(Icons.person,size: 32,),),
-        ),
-        */
-         // centerTitle: true,
-         // title:const Text("كل المحلات",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 17,fontWeight: FontWeight.w900),),
         actions: [
           Builder(
             builder: (BuildContext context) {
@@ -46,240 +61,411 @@ class _ProductByShopDetailPageState extends State<ProductByShopDetailPage> {
             },
           ),
         ],
-      ),
-      body: Stack(
-        children: [
-          //const BackGroundColor(),
-          Column(
-            children: [
-               SizedBox(
-                 width: size.width * 1,
-                 height: size.height * 0.3,
-                 child: Image.network("https://m7card.manarhays.com/public/images/20221114234157image_190x230-218.png",
-                   width: size.width * 1,
-                   height: size.height * 0.3,
-                   fit: BoxFit.cover,
-                 ),
-               ),
-              _createProductPriceTitleEtc(),
-
-               const SizedBox(height:70),
-
-               SizedBox(
-                 height: size.height*0.08,
-                 width: size.width * 0.5,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                    primary:  _buttonColor,
-                  ),
-                  onPressed: (){},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:const[
-                      Icon(Icons.shopping_basket,color: Colors.white,),
-                      Text("شراء",style: TextStyle(fontFamily: "Almarai",color: Colors.white,fontSize: 15,fontWeight: FontWeight.w900),)
-                    ],
-                  ),
-                ),
-              ),
-
-            ],
-
+        centerTitle: true,
+        title: Text(
+          "null",
+          style: TextStyle(
+              fontFamily: "Almarai",
+              color: Color.fromRGBO(73, 70, 97, 1),
+              fontSize: 20,
+              fontWeight: FontWeight.w600
           ),
-        ],
+        ),
+      ),
+      body: BlocListener<ProductsByShopBloc, ProductsByShopState>(
+        listener: (BuildContext context, state) {
+          if (state is GetProductsByShopSuccess)
+          {
+            print("GetProductsByShopSuccess");
+            if (state.productByShopData.length == 0)
+            {
+              _lastProductByShopCategory = true;
+            }
+            else
+            {
+              print("productByShopData.addAll(state.productByShopData)");
+              productByShopData.addAll(state.productByShopData);
+              print(productByShopData.first.title);
+            }
+          }
+          if (state is GetProductsByShopError)
+          {
+            print("GetProductsByShopError");
+            print(state.errorMessage);
+          }
+        },
+        child: Column(
+          children: [
+            SizedBox(
+              height: height / 4,
+              width: width / 1,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    height: height / 4,
+                    width: width / 1,
+                    child:Image.network(widget.shopModel.banner,fit: BoxFit.cover,),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 115),
+                    child: Container(
+                      height: height / 10,
+                      width: width / 1,
+                      color: Colors.black.withOpacity(0.3),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 100),child:  Column(
+                    children: [
+                      SizedBox(
+                        height: height / 17,
+                        width:  width / 8,
+                        child:Center(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.black,
+                              radius: 51,
+                              child: CircleAvatar(
+                                foregroundImage :NetworkImage(widget.shopModel.logo,scale: 50),
+                                radius: 49,
+                                // child: Image.network(shopModel.logo,fit: BoxFit.fill,),
+                              ),
+                            )
+                        ),
+                      ),
+                      Text(
+                        "null",
+                        style: TextStyle(
+                            fontFamily: "Almarai",
+                            color: Color.fromRGBO(73, 70, 97, 1),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600
+                        ),
+                      ),
+                      RatingBar.builder(
+                        itemSize: 25,
+                        initialRating: widget.shopModel.reviewsCount.toDouble(),
+                        minRating: 0.5,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                      ),
+                    ],
+                  ),),
+                ],
+              ),
+            ),
+            SizedBox(height: 20,),
+            BlocBuilder<ProductsByShopBloc,ProductsByShopState>(
+                builder: (BuildContext context,state){
+                  if(state is GetProductsByShopError)
+                  {
+                    return SizedBox(
+                        child:  Center(
+                            child: Text(state.errorMessage, style: TextStyle(
+                              fontSize: 14,
+                              color: BLACK_GREY,
+                            ))
+                        )
+                    );
+                  }
+                  if(state is GetProductsByShopWaiting)
+                  {
+                    return Center(child: CircularProgressIndicator(color: Colors.blue,),);
+                  }
+                  if(state is GetProductsByShopSuccess)
+                  {
+                    if(_lastProductByShopCategory)
+                    {
+                      return Wrap();
+                    }
+                    else
+                    {
+                      return _buildBody(context, productByShopModelModelList: productByShopData,);
+                    }
+                  }
+                  return SizedBox();
+                }
+            ),
+          ],
+        ),
       ),
     );
   }
 
-
-  Widget _createProductPriceTitleEtc(){
-    return Container(
-      color: Colors.white,
-      padding:const EdgeInsets.all(16),
-      child: Column(
-
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-
-              const Text("799.2",
-                style: TextStyle(
-                    fontFamily: "Almarai",
-                    color: Color.fromRGBO(73, 70, 97, 1),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700
-                ),),
-
-               const Text(
-                 "999",
-                style: TextStyle(
-                    fontFamily: "Almarai",
-                    color: Color.fromRGBO(73, 70, 97, 1),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-
-                ),),
-
-              const Text("999",
-                style: TextStyle(
-                    fontFamily: "Almarai",
-                    color: Color.fromRGBO(73, 70, 97, 1),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700
-                ),),
-
-              GestureDetector(
-                onTap: (){
-                  setState(() {
-                    if(_isLove==true){
-                      _isLove = false;
-                     // Fluttertoast.showToast(msg: AppLocalizations.of(context)!.translate('item_deleted_wishlist')!, toastLength: Toast.LENGTH_LONG);
-                    } else {
-                      //Fluttertoast.showToast(msg: AppLocalizations.of(context)!.translate('item_added_wishlist')!, toastLength: Toast.LENGTH_LONG);
-                      _isLove = true;
-                    }
-                  });
-                },
-                child: Icon(
-                    Icons.favorite, color: _isLove==true?Colors.red:Colors.grey, size: 28
-                ),
-              )
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          const Text("FreeFire" ,style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            fontFamily: "Almarai",
-            color: Color.fromRGBO(73, 70, 97, 1),
-          )),
-
-          const SizedBox(height: 12),
-
-          const Text("demo-product-8dkcu" ,style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            fontFamily: "Almarai",
-            color: Color.fromRGBO(73, 70, 97, 1),
-          )),
-
-          const SizedBox(height: 12),
-
-          IntrinsicHeight(
-            child: Row(
+  Widget _cardItem(BuildContext context, int price,String imageUrl,String title,ProductByShopModel productByShopModel){
+    return SizedBox(
+      width: 220,
+      child: GestureDetector(
+        onTap: ()
+        {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ProductDetailPage(productByShopModel: productByShopModel,),
+            ),
+          );
+        },
+        child: Card(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child:Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                GestureDetector(
-                  //behavior: HitTestBehavior.translucent,
-                  onTap: (){
-                    //Navigator.push(context, MaterialPageRoute(builder: (context) => ProductReviewPage()));
-                  },
-                  child: Row(
-                    children: [
-
-                      Icon(Icons.star, color: Colors.grey[700], size: 18),
-                      Icon(Icons.star, color: Colors.grey[700], size: 18),
-                      Icon(Icons.star, color: Colors.grey[700], size: 18),
-                      Icon(Icons.star, color: Colors.grey[700], size: 18),
-                      Icon(Icons.star, color: Colors.grey[700], size: 18),
-
-                      const  SizedBox(
-                        width: 3,
-                      ),
-
-                      const Text("تقييم", style: TextStyle(
-                           fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                          fontFamily: "Almarai",
-                        color: Color.fromRGBO(73, 70, 97, 1),
-                      )),
-
-                      const  SizedBox(
-                        width: 20,
-                      ),
-
-                      VerticalDivider(
-                        width: 40,
-                        thickness: 1,
-                        color: Colors.grey[300],
-                      ),
-
-                      const  SizedBox(
-                        width: 10,
-                      ),
-                      const Text("كل التعليقات", style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Almarai",
-                        color: Color.fromRGBO(73, 70, 97, 1),
-                      )),
-
-                    ],
+                SizedBox(
+                  height: 120,
+                  width: 200,
+                  child: Card(
+                    color: Colors.black,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    child:Image.network(imageUrl,fit: BoxFit.cover,),
                   ),
                 ),
+                SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
 
+                    Padding(
+                      padding:const EdgeInsets.all(8.0),
+                      child: Text("${price.toString()} \$" ,style: const TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 17,fontWeight: FontWeight.w900),),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Text(title ,style: const TextStyle(fontFamily: "Almarai",color:Colors.grey,fontSize: 13,fontWeight: FontWeight.w500),),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-
-          Divider(
-            height: 50,
-            thickness: 1,
-            color: Colors.grey[200],
-          ),
-
-         // const SizedBox(height: 12),
-
-          _createProductDescription(),
-
-          Divider(
-            height: 50,
-            thickness: 1,
-            color: Colors.grey[200],
-          ),
-
-        ],
+        ),
       ),
     );
   }
 
-  Widget _createProductDescription(){
-    return Container(
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const[
-             Text(('وصف'),
-               style: TextStyle(
-                color: Color.fromRGBO(73, 70, 97, 1),
-                fontSize: 16, fontWeight: FontWeight.bold,
-                fontFamily: "Almarai",
-               ),
-             ),
 
-             SizedBox(
-              height: 16,
-            ),
-
-             Text('short description',
-               style: TextStyle(
-                 color: Color.fromRGBO(73, 70, 97, 1),
-                 fontSize: 16, fontWeight: FontWeight.bold,
-                 fontFamily: "Almarai",
-               ),),
-
-             SizedBox(
-              height: 16,
-            ),
-
-          ],
-        )
+  Widget _buildBody(BuildContext context, {required List<ProductByShopModel> productByShopModelModelList})
+  {
+    final double boxImageSize = ((MediaQuery.of(context).size.width)-14)/2-12;
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: GridView.builder(
+          shrinkWrap: true,
+          primary: false,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
+            crossAxisCount: 2,
+            childAspectRatio : 1,
+          ),
+          itemCount: productByShopModelModelList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _cardItem(
+                context,
+                productByShopModelModelList[index].discountPrice!,
+                productByShopModelModelList[index].image!,
+                productByShopModelModelList[index].title!,
+                productByShopModelModelList[index],
+            );
+          }
+      ),
     );
   }
 
 }
+
+
+
+
+
+/*
+BlocBuilder<ProductsByShopBloc,ProductsByShopState>(
+                builder: (BuildContext context,state){
+                  if(state is GetProductsByShopError)
+                    {
+                      return SizedBox(
+                          child:  Center(
+                              child: Text(state.errorMessage, style: TextStyle(
+                                fontSize: 14,
+                                color: BLACK_GREY,
+                              ))
+                          )
+                      );
+                    }
+                  else
+                  {
+                    if(_lastProductByShopCategory){
+                      return Wrap();
+                    }else{
+                      return Text(productByShopData.first.title);
+                    }
+                  }
+                }
+            ),
+ */
+
+/*
+Column(
+                        children: [
+                          SizedBox(
+                            height: height / 4,
+                            width: width / 1,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  height: height / 4,
+                                  width: width / 1,
+                                  child:Image.network(widget.shopModel.banner,fit: BoxFit.cover,),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 115),
+                                  child: Container(
+                                    height: height / 10,
+                                    width: width / 1,
+                                    color: Colors.black.withOpacity(0.3),
+                                  ),
+                                ),
+                                Padding(padding: EdgeInsets.only(top: 100),child:  Column(
+                                  children: [
+                                    SizedBox(
+                                      height: height / 17,
+                                      width:  width / 8,
+                                      child:Center(
+                                          child: CircleAvatar(
+                                            backgroundColor: Colors.black,
+                                            radius: 51,
+                                            child: CircleAvatar(
+                                              foregroundImage :NetworkImage(widget.shopModel.logo,scale: 50),
+                                              radius: 49,
+                                              // child: Image.network(shopModel.logo,fit: BoxFit.fill,),
+                                            ),
+                                          )
+                                      ),
+                                    ),
+                                    Text(
+                                      "null",
+                                      style: TextStyle(
+                                          fontFamily: "Almarai",
+                                          color: Color.fromRGBO(73, 70, 97, 1),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600
+                                      ),
+                                    ),
+                                    RatingBar.builder(
+                                      itemSize: 25,
+                                      initialRating: widget.shopModel.reviewsCount.toDouble(),
+                                      minRating: 0.5,
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount: 5,
+                                      itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                                      itemBuilder: (context, _) => Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      onRatingUpdate: (rating) {
+                                        print(rating);
+                                      },
+                                    ),
+                                  ],
+                                ),),
+                              ],
+                            ),
+                          ),
+
+                        ],
+                      )
+ */
+
+
+
+/*
+Stack(
+        children: [
+          const BackGroundColor(),
+          Column(
+            children: [
+              SizedBox(
+                height: height / 4,
+                width: width / 1,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      height: height / 4,
+                      width: width / 1,
+                      child:Image.network(widget.shopModel.banner,fit: BoxFit.cover,),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 115),
+                      child: Container(
+                      height: height / 10,
+                      width: width / 1,
+                      color: Colors.black.withOpacity(0.3),
+                     ),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 100),child:  Column(
+                      children: [
+                        SizedBox(
+                          height: height / 17,
+                          width:  width / 8,
+                          child:Center(
+                              child: CircleAvatar(
+                                backgroundColor: Colors.black,
+                                radius: 51,
+                                child: CircleAvatar(
+                                  foregroundImage :NetworkImage(widget.shopModel.logo,scale: 50),
+                                  radius: 49,
+                                  // child: Image.network(shopModel.logo,fit: BoxFit.fill,),
+                                ),
+                              )
+                          ),
+                        ),
+                        Text(
+                          "null",
+                          style: TextStyle(
+                              fontFamily: "Almarai",
+                              color: Color.fromRGBO(73, 70, 97, 1),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600
+                          ),
+                        ),
+                        RatingBar.builder(
+                          itemSize: 25,
+                          initialRating: widget.shopModel.reviewsCount.toDouble(),
+                          minRating: 0.5,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          onRatingUpdate: (rating) {
+                            print(rating);
+                          },
+                        ),
+                      ],
+                    ),),
+                  ],
+                ),
+              ),
+
+            ],
+          ),
+        ],
+      ),
+ */

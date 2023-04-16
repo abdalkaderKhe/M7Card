@@ -32,7 +32,9 @@ class _AddNewTechnicalSupportTicketState extends State<AddNewTechnicalSupportTic
         elevation: 0.5,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               icon: const Icon(
                 Icons.arrow_forward,
                 size: 30,

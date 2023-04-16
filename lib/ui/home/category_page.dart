@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m7card/bloc/account/user_profile/user_profile_bloc.dart';
@@ -5,13 +6,21 @@ import 'package:m7card/bloc/category/products_by_category/products_by_category_b
 import 'package:m7card/config/constants.dart';
 import 'package:m7card/model/product_by_category.dart';
 import 'package:m7card/model/user_profile.dart';
+import 'package:m7card/ui/account/technical_support_tickets.dart';
+import 'package:m7card/ui/authentication/signin/signin_email_or_phone_page.dart';
 import 'package:m7card/ui/home/economize_page.dart';
-import 'package:m7card/ui/home/product_page.dart';
+import 'package:m7card/ui/home/product_detail_page.dart';
+import 'package:m7card/ui/home/web_view_page.dart';
 import 'package:m7card/ui/shopping_cart/payment_form.dart';
 import 'package:m7card/ui/shopping_cart/shopping_cart_page.dart';
 import 'package:m7card/ui/widgets/backgroud_color.dart';
 import 'package:m7card/ui/widgets/custom_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+// Import for Android features.
+// Import for iOS features.
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+import '../account/direct_technical_support_chat.dart';
 class CategoryPage extends StatefulWidget {
   String title;
   int categoryId;
@@ -29,7 +38,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
 
   bool _isLogin = false;
-  late String _token;
+  late String _token ;
 
   late UserProfileBloc _userProfileBloc;
   UserProfile userProfile = UserProfile(id: 0, firstName: '', lastName: '', email: '', phone: '', gender: '', dateOfBirth: '', image: '', facebook: '', twitter: '', linkedin: '', instagram: '', pinterest: '', youtube: '');
@@ -60,10 +69,18 @@ class _CategoryPageState extends State<CategoryPage> {
     return _token;
   }
 
+
+
+
   @override
   void initState() {
     super.initState();
     _checkIsLogin();
+
+
+
+
+
 
     _productsByCategoryBloc = BlocProvider.of<ProductsByCategoryBloc>(context);
     _productsByCategoryBloc.add(GetProductsByCategory(CategoryID: widget.categoryId));
@@ -71,7 +88,8 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         const BackGroundColor(),
@@ -162,17 +180,20 @@ class _CategoryPageState extends State<CategoryPage> {
             ],
             child: SafeArea(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 280,top: 15),
-                      child: Text("بطاقات رصيد",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 17,fontWeight: FontWeight.w700),),
-                    ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width / 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "بطاقات رصيد",
+                        style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),
+                            fontSize: 15,fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(height: height /50,),
 
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-
-                      child: BlocBuilder<ProductsByCategoryBloc, ProductsByCategoryState>(
+                      BlocBuilder<ProductsByCategoryBloc, ProductsByCategoryState>(
                         builder: (BuildContext context, state){
                           if(state is GetProductsByCategoryError)
                           {
@@ -200,27 +221,29 @@ class _CategoryPageState extends State<CategoryPage> {
                               }
                               else
                               {
-                                return GridView.builder(
+                                return Directionality(
+                                    textDirection: TextDirection.rtl, child: GridView.builder(
                                     shrinkWrap: true,
                                     primary: false,
+                                    reverse: true,
                                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisSpacing: 4,
                                       mainAxisSpacing: 4,
                                       crossAxisCount: 2,
-                                      childAspectRatio: 0.8,
+                                      childAspectRatio: 0.76,
                                     ),
                                     itemCount: productByCategoryData.length,
                                     itemBuilder: (BuildContext context, int index) {
                                       return _cardItem(
-                                          context,
-                                          productByCategoryData[index].price,
-                                          productByCategoryData[index].totalReviews,
-                                          productByCategoryData[index].image,
-                                          productByCategoryData[index].title,
-                                          productByCategoryData[index],
+                                        context,
+                                        productByCategoryData[index].price,
+                                        productByCategoryData[index].totalReviews,
+                                        productByCategoryData[index].image,
+                                        productByCategoryData[index].title,
+                                        productByCategoryData[index],
                                       );
                                     }
-                                );
+                                ));
                               }
                             }
                           }
@@ -228,66 +251,85 @@ class _CategoryPageState extends State<CategoryPage> {
                         //child: _buildBody(context),
                       ),
 
-                    ),
 
-                    const SizedBox(height: 40,),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 230.0),
-                      child:Text("طريقة الاستخدام",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 17,fontWeight: FontWeight.w600),),
-                    ),
 
-                    const SizedBox(height: 40,),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 80),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          primary: _buttonColor,
-                        ),
-                        onPressed: (){},
-                        child: SizedBox(
-                          width: 250,
-                          height: 55,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children:const [
-                              Icon(Icons.arrow_back,color: Colors.white,),
-                              SizedBox(width: 9,),
-                              Text("طريقة الاستخدام",style: TextStyle(fontFamily: "Almarai",color: Colors.white,fontSize: 14,fontWeight: FontWeight.w600),)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                      SizedBox(height: height /50,),
+                      Text("طريقة الاستخدام",style:
+                      TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),
+                          fontSize: 15,fontWeight: FontWeight.w600),),
 
-                    const SizedBox(height: 15,),
 
-                    Padding(
-                      padding: const EdgeInsets.only(left: 80),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          primary:const Color.fromRGBO(82, 81, 112, 1),
-                        ),
-                        onPressed: (){},
-                        child: SizedBox(
-                          width: 250,
-                          height: 55,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children:const [
-                              Icon(Icons.arrow_back,color: Colors.white,),
-                              SizedBox(width: 9,),
-                              Text("تواصل مع خدمة العملاء",style: TextStyle(fontFamily: "Almarai",color: Colors.white,fontSize: 14,fontWeight: FontWeight.w600),)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                     Center(
+                       child: Column(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         crossAxisAlignment: CrossAxisAlignment.center,
+                         children: [
+                           SizedBox(height: height /50,),
 
-                    const SizedBox(height: 60,),
+                           ElevatedButton(
+                             style: ElevatedButton.styleFrom(
+                               shape: const StadiumBorder(),
+                               primary: _buttonColor,
+                             ),
+                             onPressed: ()
+                             {
 
-                  ],
+                               Navigator.of(context).push(
+                                 MaterialPageRoute(
+                                   builder: (context) => WebViewPage(url: 'http://m7card.manarhays.com/how-to-use/${widget.categoryId}',),
+                                 ),
+                               );
+
+                             },
+                             child: SizedBox(
+                               width: width / 1.5,
+                               height: height /16,
+                               child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children:const [
+                                   Icon(Icons.arrow_back,color: Colors.white,),
+                                   Text("طريقة الاستخدام",style: TextStyle(fontFamily: "Almarai",
+                                       color: Colors.white,fontSize: 14,fontWeight: FontWeight.w600),)
+                                 ],
+                               ),
+                             ),
+                           ),
+
+                           SizedBox(height: height /50,),
+
+                           ElevatedButton(
+                             style: ElevatedButton.styleFrom(
+                               shape: const StadiumBorder(),
+                               primary:const Color.fromRGBO(82, 81, 112, 1),
+                             ),
+                             onPressed: ()
+                             {
+                               Navigator.of(context).pushReplacement(
+                                 MaterialPageRoute(
+                                   builder: (context) => DirectTechnicalSupportChat(),
+                                 ),
+                               );
+                             },
+                             child: SizedBox(
+                               width: width / 1.5,
+                               height: height /16,
+                               child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children:const [
+                                   Icon(Icons.arrow_back,color: Colors.white,),
+                                   Text("تواصل مع خدمة العملاء",style: TextStyle(fontFamily: "Almarai",color: Colors.white,
+                                       fontSize: 13,fontWeight: FontWeight.w600),)
+                                 ],
+                               ),
+                             ),
+                           ),
+                         ],
+                       ),
+                     )
+
+
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -296,17 +338,33 @@ class _CategoryPageState extends State<CategoryPage> {
       ],
     );
   }
+
+
+
+
   Widget _cardItem(BuildContext context,int price,int totalReviews,String imageUrl,String title,ProductByCategory productByCategory){
-    //String totalReviewsNumber = totalReviews.toString();
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return InkWell(
-      onTap: (){
+      onTap: () {
+        if (_isLogin) {
           Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ProductPage(productByCategory: productByCategory,),
-          ),
-        );},
+            MaterialPageRoute(
+              builder: (context) => PaymentForm(productByCategory: productByCategory,),
+            ),
+          );
+        }
+        else
+        {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) =>  SigninEmailOrPhonePage(),
+            ),
+          );
+         }
+        },
       child: SizedBox(
-        width: 220,
+        width: width / 4,
         child: Card(
           color: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -316,8 +374,8 @@ class _CategoryPageState extends State<CategoryPage> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 SizedBox(
-                  height: 120,
-                  width: 200,
+                  height: height / 6.2,
+                  width: width / 1,
                   child: Card(
                     color: Colors.black,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -330,13 +388,13 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: [
 
                     Padding(
-                      padding:const EdgeInsets.all(8.0),
-                      child: Text("${price.toString()} \$" ,style: const TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 16,fontWeight: FontWeight.w900),),
+                      padding:const EdgeInsets.all(4.0),
+                      child: Text("${price.toString()} \$" ,style: const TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 14,fontWeight: FontWeight.w900),),
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(title ,style: const TextStyle(fontFamily: "Almarai",color:Colors.grey,fontSize: 14,fontWeight: FontWeight.w500),),
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(title ,style: const TextStyle(fontFamily: "Almarai",color:Colors.grey,fontSize: 12,fontWeight: FontWeight.w500),),
                     ),
 
                   ],
@@ -368,17 +426,28 @@ class _CategoryPageState extends State<CategoryPage> {
                     primary:  _buttonColor,
                   ),
                   onPressed: (){
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>  PaymentForm(productByCategory: productByCategory,),
-                      ),
-                    );
+                    if(_isLogin)
+                      {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>  PaymentForm(productByCategory: productByCategory,),
+                          ),
+                        );
+                      }
+                    else
+                      {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) =>  SigninEmailOrPhonePage(),
+                          ),
+                        );
+                      }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children:const [
-                      Icon(Icons.shopping_basket,color: Colors.white,),
-                      Text("شراء",style: TextStyle(fontFamily: "Almarai",color: Colors.white,fontSize: 12,fontWeight: FontWeight.w600),)
+                      Icon(Icons.shopping_basket,color: Colors.white,size: 22,),
+                      Text("شراء",style: TextStyle(fontFamily: "Almarai",color: Colors.white,fontSize: 11,fontWeight: FontWeight.w600),)
                     ],
                   ),
                 ),
@@ -387,6 +456,33 @@ class _CategoryPageState extends State<CategoryPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showMyDialog(String content) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('تنبيه'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children:<Widget>[
+                Text(content),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('اغلاق'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

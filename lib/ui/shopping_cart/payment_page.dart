@@ -36,31 +36,32 @@ class _PaymentCategoryPageState extends State<PaymentCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        centerTitle: false,
+        centerTitle:true,
         backgroundColor: const Color.fromRGBO(246, 246, 246, 1),
         elevation: 0,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               icon: const Icon(
                 Icons.arrow_forward,
-                size: 30,
+                size: 25,
               ),
               color: Color.fromRGBO(133, 116, 231, 1)),
         ],
-        title: const Padding(
-          padding: EdgeInsets.only(left: 260),
-          child: Text(
-            "الدفع",
-            style: TextStyle(
-                fontFamily: "Almarai",
-                color: Color.fromRGBO(73, 70, 97, 1),
-                fontSize: 17,
-                fontWeight: FontWeight.w900),
-          ),
+        title:  Text(
+          "الدفع",
+          style: TextStyle(
+              fontFamily: "Almarai",
+              color: Color.fromRGBO(73, 70, 97, 1),
+              fontSize: 15,
+              fontWeight: FontWeight.w800),
         ),
       ),
       body: BlocListener<PaymentCategoryBloc, PaymentCategoryState>(
@@ -76,31 +77,24 @@ class _PaymentCategoryPageState extends State<PaymentCategoryPage> {
           }
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(horizontal: width /18),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const SizedBox(
-                height: 10,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 200),
-                child: Text(
-                  // textAlign : TextAlign.left,
-                  "يرجى اختيار طرق الدفع",
-                  style: TextStyle(
-                    height: 1.5,
-                    fontFamily: "Almarai",
-                    color: Colors.grey,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w800,
-                  ),
+               SizedBox(height: height / 50,),
+               Text(
+                // textAlign : TextAlign.left,
+                "يرجى اختيار طرق الدفع",
+                style: TextStyle(
+                  height: 1.5,
+                  fontFamily: "Almarai",
+                  color: Colors.grey,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
+               SizedBox(height: height / 50,),
 
               BlocBuilder<PaymentCategoryBloc, PaymentCategoryState>(
                 builder: (BuildContext context, state){
@@ -118,30 +112,27 @@ class _PaymentCategoryPageState extends State<PaymentCategoryPage> {
                     );
                   }
                   if(state is GetPaymentCategorySuccess){
-                    return CustomScrollView(
+                    return Directionality(textDirection: TextDirection.rtl, child: CustomScrollView(
                       shrinkWrap: true,
                       primary: false,
                       slivers: <Widget>[
-                        SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                          sliver: SliverGrid(
-                            gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 8,
-                              crossAxisSpacing: 8,
-                              childAspectRatio: 0.73,
-                            ),
-                            delegate: SliverChildBuilderDelegate(
-                                  (BuildContext context, int index) {
-                                return buildCardGrid(context, state.paymentCategoryData[index].name, "assets/images/bank.jpg", icons[index],state.paymentCategoryData[index].id);
-                              },
-                              childCount: state.paymentCategoryData.length,
-                            ),
+                        SliverGrid(
+                          gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                            childAspectRatio: 0.8,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                              return buildCardGrid(context, state.paymentCategoryData[index].name, "assets/images/bank.jpg", icons[index],state.paymentCategoryData[index].id);
+                            },
+                            childCount: state.paymentCategoryData.length,
                           ),
                         ),
                       ],
-                    );
+                    ));
                   }
                   return Container();
                 },
@@ -154,8 +145,9 @@ class _PaymentCategoryPageState extends State<PaymentCategoryPage> {
     );
   }
   Widget buildCardGrid(context, name, imageUrl, IconData,id) {
-    final double boxImageSize =
-        ((MediaQuery.of(context).size.width) - 24) / 2 - 12;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final double boxImageSize = ((MediaQuery.of(context).size.width) - 24) / 2 - 12;
     return Container(
       child: Card(
         shape: RoundedRectangleBorder(
@@ -189,14 +181,14 @@ class _PaymentCategoryPageState extends State<PaymentCategoryPage> {
                           );
                         },
                         child: SizedBox(
-                          height: 120,
-                          width: 120,
+                          height:height / 6 ,
+                          width: width / 3.5,
                           child: Card(
                             color: Colors.indigo,
                             child: Icon(
                               IconData,
                               color: Colors.white,
-                              size: 50,
+                              size: 35,
                             ),
                           ),
                         ),
@@ -214,7 +206,7 @@ class _PaymentCategoryPageState extends State<PaymentCategoryPage> {
                       style: const TextStyle(
                         fontFamily: "Almarai",
                         color: Color(0xFF515151),
-                        fontSize: 15,
+                        fontSize: 13,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

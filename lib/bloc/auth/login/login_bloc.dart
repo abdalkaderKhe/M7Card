@@ -1,8 +1,8 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:m7card/network/api_provider.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -29,7 +29,11 @@ _postLogin(LoginEvent event, Emitter<LoginState> emit) async {
       print(resulte["message"]);
 
       if(resulte["message"] == "Login Successfully"){
-        emit(LoginSuccessState());
+        var sharedPreferences = await SharedPreferences.getInstance();
+        event.token=resulte["data"]["token"];
+        sharedPreferences.setString('token', event.token);
+        sharedPreferences.setBool("isLogin", true);
+        emit(LoginSuccessState(token: event.token));
       }
       if(resulte["message"] == "Your account is not verified.Please verify your account."){
         emit(LoginAccountNotVerifiedState());

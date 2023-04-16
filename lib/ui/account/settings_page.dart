@@ -14,45 +14,47 @@ class _SettingsPageState extends State<SettingsPage> {
   bool isChecked5 = false;
   bool isChecked6 = false;
   bool isChecked7 = false;
+
    Color _activeColor = const Color.fromRGBO(73, 70, 97, 1);
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(246, 246, 246, 1),
       appBar: AppBar(
         automaticallyImplyLeading : false,
-        centerTitle: false,
+        centerTitle: true,
         backgroundColor: const Color.fromRGBO(246, 246, 246, 1),
         elevation: 0,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () { Navigator.pop(context);},
               icon: const Icon(
                 Icons.arrow_forward,
-                size: 30,
+                size: 25,
               ),
               color: Color.fromRGBO(133, 116, 231, 1)),
         ],
-        title: const Padding(
-          padding: EdgeInsets.only(left: 240),
-          child: Text(
-            "الاعدادات",
-            style: TextStyle(
-                fontFamily: "Almarai",
-                color: Color.fromRGBO(73, 70, 97, 1),
-                fontSize: 17,
-                fontWeight: FontWeight.w900),
-          ),
+        title: Text(
+          "الاعدادات",
+          style: TextStyle(
+              fontFamily: "Almarai",
+              color: Color.fromRGBO(73, 70, 97, 1),
+              fontSize: 14,
+              fontWeight: FontWeight.w800),
         ),
       ),
+
+
       body: Padding(
-        padding: const EdgeInsets.all(14.0),
+        padding: EdgeInsets.symmetric(horizontal: width / 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-             const  SizedBox(height: 15,),
+            SizedBox(height: height/ 50,),
              Text(
               "اعدادات التنبيهات",
               style: TextStyle(
@@ -62,12 +64,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   fontWeight: FontWeight.w600),
             ), //
             // "اعدادات التنبيهات",
-             const SizedBox(height: 12,),
-             Container(height: 1, width: double.infinity,color: Colors.grey.shade400,),
+            SizedBox(height: height/ 50,),
+            Container(height: 1, width: double.infinity,color: Colors.grey.shade400,),
 
-            const SizedBox(height: 12,),
+            SizedBox(height: height /90,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                  Text(
                   "ارسال كود البطاقة الى البريد الالكتروني",
@@ -94,9 +97,10 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
 
-            const SizedBox(height: 12,),
+            SizedBox(height: height /90,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   "الرسائل الشهرية لمعرفة جديدنا من التحديثات والعروض",
@@ -123,9 +127,10 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
 
-            const SizedBox(height: 12,),
+            SizedBox(height: height /90,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                  SizedBox(
                   // height: 50,
@@ -133,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                    child: Text(
                      textAlign : TextAlign.end,
                      overflow: TextOverflow.ellipsis,
-                     maxLines : 2,
+                     maxLines : 3,
                     "المناسبات والاعياد (قد تتضمن خصومات حصرية الى مستلميها)",
                     style: TextStyle(
                         fontFamily: "Almarai",
@@ -159,7 +164,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
 
-            const SizedBox(height: 12,),
+            SizedBox(height: height /90,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -189,7 +194,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
 
             ///////////////////////////////
-            const  SizedBox(height: 18,),
+            SizedBox(height: height /90,),
             Text(
               "لغة التطبيق",
               style: TextStyle(
@@ -198,9 +203,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   fontSize: 17,
                   fontWeight: FontWeight.w600),
             ),
-            const SizedBox(height: 12,),
+            SizedBox(height: height /70,),
             Container(height: 1, width: double.infinity,color: Colors.grey.shade400,),
-            const SizedBox(height: 12,),
+            SizedBox(height: height /90,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -226,7 +231,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 12,),
+            SizedBox(height: height /90,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -254,7 +259,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
 
             ///////////////////
-            const  SizedBox(height: 18,),
+            SizedBox(height: height /90,),
             Text(
               "المظهر",
               style: TextStyle(
@@ -263,9 +268,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   fontSize: 17,
                   fontWeight: FontWeight.w600),
             ),
-            const SizedBox(height: 12,),
+            SizedBox(height: height /90,),
             Container(height: 1, width: double.infinity,color: Colors.grey.shade400,),
-            const SizedBox(height: 12,),
+            SizedBox(height: height /90,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -292,10 +297,10 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
 
-            const SizedBox(height: 45,),
+            SizedBox(height: height /70,),
             SizedBox(
               width: double.infinity,
-              height: 55,
+              height: height /15,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape:const StadiumBorder(),
@@ -305,8 +310,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children:const [
-                    Icon(Icons.save,color: Colors.white,),
-                    Text("حفظ التغييرات",style: TextStyle(fontFamily: "Almarai",color: Colors.white,fontSize: 17,fontWeight: FontWeight.w900),)
+                    Icon(Icons.save,color: Colors.white,size: 22,),
+                    Text("حفظ التغييرات",style: TextStyle(fontFamily: "Almarai",color: Colors.white,fontSize: 14,
+                        fontWeight: FontWeight.w800),)
                   ],
                 ),
               ),

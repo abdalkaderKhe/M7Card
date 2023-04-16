@@ -4,6 +4,9 @@ import 'package:m7card/bloc/payment/payment_by_category/payment_by_category_bloc
 import 'package:m7card/config/constants.dart';
 import 'package:m7card/model/payment_by_category.dart';
 import 'package:m7card/ui/shopping_cart/payment_form.dart';
+
+import 'add_credit_form.dart';
+import 'add_credit_payment_form.dart';
 class BankPaymentPage extends StatefulWidget {
   int id;
   BankPaymentPage({Key? key, required this.id}) : super(key: key);
@@ -34,6 +37,8 @@ class _BankPaymentPageState extends State<BankPaymentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return BlocListener<PaymentByCategoryBloc, PaymentByCategoryState>(
       listener:(BuildContext context, state) {
         if(state is GetPaymentByCategoryInitial){
@@ -51,32 +56,32 @@ class _BankPaymentPageState extends State<BankPaymentPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: false,
+          centerTitle: true,
           backgroundColor: const Color.fromRGBO(246, 246, 246, 1),
           elevation: 0,
           automaticallyImplyLeading:false,
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 icon: const Icon(
                   Icons.arrow_forward,
-                  size: 30,
+                  size: 25,
                 ),
                 color: Color.fromRGBO(133, 116, 231, 1)),
           ],
 
-          title: const Padding(
-            padding: EdgeInsets.only(left: 260),
-            child: Text(
-              "البنوك",
-              style: TextStyle(
-                  fontFamily: "Almarai",
-                  color: Color.fromRGBO(73, 70, 97, 1),
-                  fontSize: 17,
-                  fontWeight: FontWeight.w900),
-            ),
+          title: Text(
+            "البنوك",
+            style: TextStyle(
+                fontFamily: "Almarai",
+                color: Color.fromRGBO(73, 70, 97, 1),
+                fontSize: 14,
+                fontWeight: FontWeight.w700),
           ),
         ),
+
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -101,7 +106,9 @@ class _BankPaymentPageState extends State<BankPaymentPage> {
                     );
                   }
                   if(state is GetPaymentByCategorySuccess){
-                    return CustomScrollView(
+                    return Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: CustomScrollView(
                       shrinkWrap: true,
                       primary: false,
                       slivers: <Widget>[
@@ -112,7 +119,7 @@ class _BankPaymentPageState extends State<BankPaymentPage> {
                               crossAxisCount: 2,
                               mainAxisSpacing: 10,
                               crossAxisSpacing: 10,
-                              childAspectRatio: 0.82,
+                              childAspectRatio: 0.85,
                             ),
                             delegate: SliverChildBuilderDelegate(
                                   (BuildContext context, int index) {
@@ -120,6 +127,7 @@ class _BankPaymentPageState extends State<BankPaymentPage> {
                                   context,
                                   state.paymentByCategoryData[index].name,
                                   images[0],
+                                  state.paymentByCategoryData[index].id.toString(),
                                 );
                               },
                               childCount: state.paymentByCategoryData.length,
@@ -127,7 +135,7 @@ class _BankPaymentPageState extends State<BankPaymentPage> {
                           ),
                         ),
                       ],
-                    );
+                    ));
                   }
                   return Container();
                 },
@@ -140,7 +148,7 @@ class _BankPaymentPageState extends State<BankPaymentPage> {
     );
   }
 
-  Widget buildCardGrid(context, name ,imageUrl){
+  Widget buildCardGrid(context, name ,imageUrl , String bankId){
     final double boxImageSize = ((MediaQuery.of(context).size.width)-50)/2-20;
     return Card(
       shape: RoundedRectangleBorder(
@@ -156,13 +164,11 @@ class _BankPaymentPageState extends State<BankPaymentPage> {
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                 child: InkWell(
                   onTap: (){
-/*
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const PaymentForm(),
+                        builder: (context) => AddCreditForm(payment_way_id: bankId,),
                       ),
                     );
- */
                   },
                   child: Image.network(
                     imageUrl,
@@ -180,7 +186,7 @@ class _BankPaymentPageState extends State<BankPaymentPage> {
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(fontFamily: "Almarai",color:Color(0xFF515151),fontSize: 15,), maxLines: 2, overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontFamily: "Almarai",color:Color(0xFF515151),fontSize: 13,), maxLines: 2, overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
