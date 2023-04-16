@@ -23,6 +23,8 @@ class _SearchPageState extends State<SearchPage> {
   late AllCategoryBloc _allCategoryBloc;
   bool _lastDataAllCategory = false;
 
+
+
   List<CategoryModel> searchedForCategories = [];
   bool isSearching = false;
   final _searchTextController = TextEditingController();
@@ -37,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
   {
     var sharedPreferences = await SharedPreferences.getInstance();
     bool isLogin;
-    isLogin = sharedPreferences.getBool("isLogin")!;
+    isLogin = await sharedPreferences.getBool("isLogin")!;
 
     setState(() {
       _isLogin = isLogin;
@@ -166,7 +168,7 @@ class _SearchPageState extends State<SearchPage> {
 
                   const Padding(padding: EdgeInsets.only(top: 20,right: 8,bottom: 20),
 
-                  child:Text("ما الذي تريد البحث عنه",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 17),)),
+                  child:Text("ما الذي تريد البحث عنه",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 14),)),
 
                   // search  TextFormField
                   _buildSearchField(context),
@@ -231,6 +233,7 @@ class _SearchPageState extends State<SearchPage> {
             crossAxisSpacing: 4,
             mainAxisSpacing: 4,
             crossAxisCount: 3,
+            childAspectRatio: 1.1,
           ),
           itemCount: categoryModelList.length,
           itemBuilder: (BuildContext context, int index) {
@@ -258,7 +261,7 @@ class _SearchPageState extends State<SearchPage> {
           fillColor:const Color.fromRGBO(229, 232, 239, 1),
           filled: true,
           hintText: "أكتب الذي تريد البحث عنه..",
-          hintStyle: const TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(181, 180, 240, 1),fontSize: 14,),
+          hintStyle: const TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(181, 180, 240, 1),fontSize: 13,),
           hintTextDirection: TextDirection.rtl,
           suffixIcon: const Icon(Icons.search),
           border: OutlineInputBorder(

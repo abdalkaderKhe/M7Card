@@ -18,21 +18,22 @@ _postOrderPayment(OrderPaymentEvent event, Emitter<OrderPaymentState> emit) asyn
   emit(PostOrderPaymentLoadingState());
 
   if (event is SubmitButtonPressEvent){
-    var resulte =  await apiProvider.postOrderPayment(
-      url: "https://m7card.manarhays.com/api/v100/register",
-      body:{
-        "acc_name" : event.accName,
-        "user_id": "1",
-        "amount": event.amount,
-        "balance_value": event.balanceValue,
-        "date": event.date,
-        "note": event.note,
-      },
 
+    var resulte =  await apiProvider.postOrderPayment(
+      amount: event.amount,
+      balanceValue: event.balanceValue,
+      note: event.note,
+      name: event.accName,
+      payment_way_id: event.payment_way_id,
+      dateTime: event.date,
     );
-    if(resulte["success"].toString() == "true"){
+
+    if(resulte["success"].toString() == "true")
+    {
       emit(PostOrderPaymentSuccessState());
-    }else if(resulte["success"].toString() == "false"){
+    }
+    else if(resulte["success"].toString() == "false")
+    {
       emit(PostOrderPaymentErrorState(message: ''));
     }
   }

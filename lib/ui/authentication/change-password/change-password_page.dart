@@ -32,37 +32,97 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    late final  TextEditingController _emailEditingController = TextEditingController();
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         automaticallyImplyLeading : false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: false,
-        title:  Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: GestureDetector(
-            onTap: (){
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const BottomNavBar(),
-                ),
-              );
-            },
-            child:const Center(child: Text("تصفح بدون تسجيل",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(83, 81, 94, 1),fontSize: 14,fontWeight: FontWeight.bold),)
-            ),
-          ),
-        ),
+        centerTitle: true,
         actions: [
-          const Center(child: Text("استعادة كلمة المرور",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 17,fontWeight: FontWeight.w900),)),
+          const Center(child: Text("استعادة كلمة المرور",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 15,fontWeight: FontWeight.w800),)),
           IconButton(onPressed: () {
              Navigator.pop(context);
-          }, icon: const Icon(Icons.arrow_forward,size: 30,),color: Color.fromRGBO(133, 116, 231, 1)),
+          }, icon: const Icon(Icons.arrow_forward,size: 24,),color: Color.fromRGBO(133, 116, 231, 1)),
         ],
       ),
+
       body: Stack(
         children: [
           const BackGroundColor(),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: height / 13,
+                  width: width / 1.2,
+                  child: TextFormField(
+                    controller: _emailEditingController,
+                    validator: (text){
+                      if(text!.isNotEmpty){
+                        if (text.length > 5 && text.contains('@') && text.endsWith('.com')) {
+                          return null;
+                        }
+                      }
+                    },
+                    textAlign:TextAlign.start ,
+                    textDirection: TextDirection.rtl,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.zero,
+                      fillColor:const Color.fromRGBO(229, 232, 239, 1),
+                      filled: true,
+                      hintText: "البريد الالكتروني",
+                      hintTextDirection: TextDirection.rtl,
+                      suffixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:const BorderSide(
+                          color: Color.fromRGBO(73, 70, 97, 1),
+                          style: BorderStyle.solid,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: height / 70,),
+                SizedBox(
+                  width: width / 1.2,
+                  height: height / 18,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape:const StadiumBorder(),
+                      primary:const  Color.fromRGBO(155, 149, 239, 1),
+                    ),
+                    onPressed: (){
+                      if (_keyForm.currentState!.validate()) {
+
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:const [
+                        Icon(Icons.arrow_back,color: Colors.white,size: 20,),
+                        Text("استعادة",style: TextStyle(fontFamily: "Almarai",
+                            color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
 
         ],
       ),

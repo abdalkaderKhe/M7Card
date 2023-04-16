@@ -12,6 +12,8 @@ import 'package:m7card/model/category.dart';
 import 'package:m7card/ui/home/all_shops.dart';
 import 'package:m7card/ui/home/category_page.dart';
 
+import '../shopping_cart/add_credit_payment_form.dart';
+
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
   @override
@@ -26,7 +28,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     "بطاقات تسوق",
     "خدمات واشتراكات",
     "الشحن المباشر",
-    "محلات"
+    "تحويل رصيد"
   ];
 
   final List<String> _apiUrls = [
@@ -44,7 +46,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     Icons.shopping_basket,
     Icons.share_sharp,
     Icons.local_shipping,
-    Icons.holiday_village_sharp
+    Icons.monetization_on
   ];
 
   bool isExpanded = false;
@@ -64,6 +66,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Stack(
@@ -85,33 +89,32 @@ class _CustomDrawerState extends State<CustomDrawer> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 30,),
+              SizedBox(height: height / 30,),
               // السهم
-              Padding(
-                padding: const EdgeInsets.only(left: 320.0),
-                child: IconButton(
-                    onPressed: () {Navigator.pop(context);},
-                    icon:const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 30,
-                    )),
-              ),
-              const SizedBox(height: 30,),
+              IconButton(
+                  onPressed: () {Navigator.pop(context);},
+                  icon:const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 30,
+                  )),
+              SizedBox(height: height / 50,),
 
               //"أقسام البطاقات"
-              const Padding(
-                padding: EdgeInsets.only(left: 200.0, right: 15),
-                child: Text(
-                  "أقسام البطاقات",
-                  style: TextStyle(
-                      fontFamily: "Almarai",
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800),
-                ),
+              Row(
+                children: [
+                  SizedBox(width: width / 50,),
+                  Text(
+                    "أقسام البطاقات",
+                    style: TextStyle(
+                        fontFamily: "Almarai",
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800),
+                  ),
+                ],
               ),
-              const SizedBox(height: 50,),
+              //SizedBox(height: height / 100,),
 
                isExpanded ? _subTitlesMenus() : _titlesMenus(),
             ],
@@ -121,76 +124,81 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  Widget _titlesMenus() {
+  Widget _titlesMenus()
+  {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: 450,
-      width: 330,
+      height: height / 1.8,
+      width: width / 1.2,
       child: ListView.builder(
           scrollDirection: Axis.vertical,
           itemCount: _titles.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8.0, right: 5, left: 8),
-              child: InkWell(
-                onTap: () {
-                  if(_titles[index] == "محلات"){
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const AllShops(),
-                      ),
-                    );
-                  }
-                  else
-                  {
-                    setState(() {
-                      this.index = index;
-                      isExpanded = true;
-                    });
-                  }
-                },
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              _icons[index],
-                              color: Colors.white,
-                              size: 25,
-                            )),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          _titles[index],
-                          style:const TextStyle(
-                              fontFamily: "Almarai",
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
+            return InkWell(
+              onTap: () {
+                if(_titles[index] == "تحويل رصيد"){
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AddCreditPaymentForm(),
                     ),
-                    IconButton(
-                        onPressed: () {},
-                        icon:const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 26,
-                        )),
-                  ],
-                ),
+                  );
+                }
+                else
+                {
+                  setState(() {
+                    this.index = index;
+                    isExpanded = true;
+                  });
+                }
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            _icons[index],
+                            color: Colors.white,
+                            size: 25,
+                          )),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        _titles[index],
+                        style:const TextStyle(
+                            fontFamily: "Almarai",
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                      onPressed: () {},
+                      icon:const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                        size: 24,
+                      )),
+                ],
               ),
             );
           }),
     );
   }
 
+
+
+
   Widget _subTitlesMenus() {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return BlocListener<GameCategoriesBloc,GameCategoriesState>(
       listener: (BuildContext context, state){
         if(state is GetGameCategoriesLoading){
@@ -246,46 +254,70 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                 itemCount: state.categoryData.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 15.0, right: 90, left: 0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        print("categoryData");
-                                      },
-                                      child:
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            height: 35,width: 50,
-                                            child: GestureDetector(
+                                  return GestureDetector(
+                                    onTap: (){
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>  CategoryPage(
+                                            categoryId: state.categoryData[index].id,
+                                            title: '',),
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(bottom: 15.0, right: 90, left: 0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          print("categoryData");
+                                        },
+                                        child:
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              height: 35,width: 50,
+                                              child: GestureDetector(
+                                                onTap: (){
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>  CategoryPage(
+                                                        categoryId: state.categoryData[index].id,
+                                                        title: '',),
+                                                    ),
+                                                  );
+                                                },
+                                                child: CircleAvatar(
+                                                  backgroundImage:NetworkImage(state.categoryData[index].image,),
+                                                  backgroundColor: Colors.white,
+                                                  radius: 20,
+                                                  // child: Image.network(state.categoryData[index].image,fit: BoxFit.cover,),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            GestureDetector(
                                               onTap: (){
                                                 Navigator.of(context).push(
                                                   MaterialPageRoute(
-                                                    builder: (context) =>  CategoryPage(categoryId: state.categoryData[index].id, title: '',),
+                                                    builder: (context) =>  CategoryPage(
+                                                      categoryId: state.categoryData[index].id,
+                                                      title: '',),
                                                   ),
                                                 );
                                               },
-                                              child: CircleAvatar(
-                                                backgroundImage:NetworkImage(state.categoryData[index].image,),
-                                                backgroundColor: Colors.white,
-                                                radius: 20,
-                                                // child: Image.network(state.categoryData[index].image,fit: BoxFit.cover,),
+                                              child: Text(
+                                                state.categoryData[index].title,
+                                                style:const TextStyle(
+                                                    fontFamily: "Almarai",
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w900
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            state.categoryData[index].title,
-                                            style:const TextStyle(
-                                                fontFamily: "Almarai",
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w900
-                                            ),
-                                          ),
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
@@ -320,10 +352,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                                 IconButton(
                                                     onPressed: ()
                                                     {
-                                                      if(_titles[index] == "محلات"){
+                                                      if(_titles[index] == "تحويل رصيد"){
                                                         Navigator.of(context).push(
                                                           MaterialPageRoute(
-                                                            builder: (context) => const AllShops(),
+                                                            builder: (context) => const AddCreditPaymentForm(),
                                                           ),
                                                         );
                                                       }

@@ -7,12 +7,17 @@ import 'package:m7card/model/category.dart';
 import 'package:m7card/model/payment_by_category.dart';
 import 'package:m7card/model/payment_category.dart';
 import 'package:m7card/model/product_by_category.dart';
+import 'package:m7card/model/product_by_shop_model.dart';
 import 'package:m7card/model/product_details.dart';
 import 'package:m7card/model/shop.dart';
 import 'package:m7card/model/slider_model.dart';
 import 'package:m7card/model/user.dart';
 import 'package:m7card/model/user_profile.dart';
+import 'package:m7card/model/wallet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/order.dart';
+import '../model/product_by_shop.dart';
 
 class ApiProvider {
 
@@ -41,6 +46,8 @@ class ApiProvider {
     String? token = await prefs.getString('token');
     return token;
   }
+
+
 
   getAllCategory(String url)async
   {
@@ -129,6 +136,30 @@ class ApiProvider {
     }
   }
 
+  getProudctByShop({required int id}) async {
+    var request = http.Request('GET', Uri.parse('https://m7card.manarhays.com/api/v100/products-by-shop/${id}}'));
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      print(response.statusCode);
+      String result = await response.stream.bytesToString();
+      var body = jsonDecode(result);
+      List responseList = body['data'];
+      List listData = responseList.map((f) => ProductByShopModel.fromJson(f)).toList();
+      listData.forEach((element)
+      {
+        print(element);
+      });
+      return listData;
+    }
+    else
+    {
+      print(response.reasonPhrase);
+    }
+
+  }
+
   postRegister(String url,dynamic body)async
   {
     var headers = {
@@ -151,7 +182,7 @@ class ApiProvider {
         return Exception("default Error ${response.statusCode.toString()}");
     }
   }
-  postLogin(String url,dynamic body)async
+   postLogin(String url,dynamic body)async
   {
 
     final request = await http.post(Uri.parse(url),body:body);
@@ -252,17 +283,17 @@ class ApiProvider {
        throw response.statusCode.toString();
      }
    }
-  postOrderPayment({required String url, required dynamic body})async
+  postOrderPayment({required String amount,required String balanceValue,required String note,required String name,required String payment_way_id , required String dateTime})async
   {
      var request = http.MultipartRequest('POST', Uri.parse('https://m7card.manarhays.com/api/v100/orderpayment'));
      request.fields.addAll({
-       'payment_way_id': '1',
-       'acc_name': '123123',
-       'user_id': '1',
-       'amount': '200',
-       'balance_value': '195',
-       'date': '',
-       'note': 'this is '
+       'payment_way_id': payment_way_id,
+       'acc_name': name,
+       'user_id': "4",
+       'amount': amount,
+       'balance_value': balanceValue,
+       'date': dateTime,
+       'note': note
      });
 
      http.StreamedResponse response = await request.send();
@@ -275,6 +306,8 @@ class ApiProvider {
        throw response.statusCode.toString();
      }
    }
+
+
   getAllCategoryGames(String url)async
   {
     var request = http.Request('GET', Uri.parse(url));
@@ -318,7 +351,6 @@ class ApiProvider {
     }
 
   }
-
   postTiket({required String url ,required UserProfile body ,required String token})async
   {
     var request = http.MultipartRequest('POST', Uri.parse(url));
@@ -349,6 +381,56 @@ class ApiProvider {
 
   }
 
+
+  // todo add user id
+  getUserOrder() async
+  {
+    var headers = {
+      'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbTdjYXJkLm1hbmFyaGF5cy5jb21cL2FwaVwvdjEwMFwvbG9naW4iLCJpYXQiOjE2NjgwODQxMDIsIm5iZiI6MTY2ODA4NDEwMiwianRpIjoiRnBxdzVYaFVkbjkyczYwcyIsInN1YiI6OSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImlkIjo5LCJuYW1lIjpudWxsLCJlbWFpbCI6InlzZmFsb3VzaDNAZ21haWwuY29tIiwiY3JlYXRlZF9hdCI6IjIwMjItMTEtMDZUMTE6MTY6MzAuMDAwMDAwWiIsInVwZGF0ZWRfYXQiOiIyMDIyLTExLTEwVDEyOjQxOjI1LjAwMDAwMFoifQ.cowAxc3Faf2xdiNQAbvYvlFpeKdJjiw0967juV00iJQ'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse('https://m7card.manarhays.com/api/v100/user/orders?user_id=4'));
+    request.fields.addAll({
+      'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbTdjYXJkLm1hbmFyaGF5cy5jb21cL2FwaVwvdjEwMFwvbG9naW4iLCJpYXQiOjE2NjgwODQxMDIsIm5iZiI6MTY2ODA4NDEwMiwianRpIjoiRnBxdzVYaFVkbjkyczYwcyIsInN1YiI6OSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImlkIjo5LCJuYW1lIjpudWxsLCJlbWFpbCI6InlzZmFsb3VzaDNAZ21haWwuY29tIiwiY3JlYXRlZF9hdCI6IjIwMjItMTEtMDZUMTE6MTY6MzAuMDAwMDAwWiIsInVwZGF0ZWRfYXQiOiIyMDIyLTExLTEwVDEyOjQxOjI1LjAwMDAwMFoifQ.cowAxc3Faf2xdiNQAbvYvlFpeKdJjiw0967juV00iJQ'
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      var responseJson = jsonDecode(await response.stream.bytesToString());
+      List responseList = responseJson['data'];
+      List<Order> listData = responseList.map((f) => Order.fromJson(f)).toList();
+      print(responseJson);
+      return listData;
+    }
+  else {
+  print(response.reasonPhrase);
+  }
+  }
+
+  getWallet()async
+  {
+    var request = http.Request('GET', Uri.parse('https://m7card.manarhays.com/api/v100/user/my-wallet?user_id=4'));
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      var responseJson = jsonDecode(await response.stream.bytesToString());
+      var responseList = responseJson['data']['balance'];
+      //List<Wallet> listData = responseList.map((f) => Wallet.fromJson(f)).toList();
+      print(responseJson);
+      Wallet walletData = Wallet.fromJson(responseList);
+      return walletData;
+    }
+    else
+    {
+      print(response.reasonPhrase);
+    }
+
+  }
 
 
 }

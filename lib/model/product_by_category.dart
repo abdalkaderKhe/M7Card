@@ -6,9 +6,9 @@ class ProductByCategory{
     required this.shortDescription,
     required this.specialDiscountType,
     required this.specialDiscount,
-    //required this.discountPrice,
+    required this.discountPrice,
     required this.formattedPrice,
-    required this.formattedDiscount,
+   // required this.formattedDiscount,
     required this.image,
     required this.price,
     required this.rating,
@@ -26,12 +26,12 @@ class ProductByCategory{
   late final String shortDescription;
   late final String specialDiscountType;
   late final int specialDiscount;
-  //late final double discountPrice;
+  late final int discountPrice;
   late final String formattedPrice;
-  late final String formattedDiscount;
+ // late final String formattedDiscount;
   late final String image;
   late final String? game;
-  late final bool? isGame;
+  late final int? isGame;
   late final int price;
   late final int rating;
   late final int totalReviews;
@@ -47,9 +47,9 @@ class ProductByCategory{
     shortDescription = json['short_description'];
     specialDiscountType = json['special_discount_type'];
     specialDiscount = json['special_discount'];
-    //discountPrice = json['discount_price'];
+    discountPrice = json['discount_price'];
     formattedPrice = json['formatted_price'];
-    formattedDiscount = json['formatted_discount'];
+   // formattedDiscount = json['formatted_discount'];
     isGame = json['is_game'];
     game = json['game'];
     image = json['image'];
@@ -70,11 +70,11 @@ class ProductByCategory{
     _data['short_description'] = shortDescription;
     _data['special_discount_type'] = specialDiscountType;
     _data['special_discount'] = specialDiscount;
-    //_data['discount_price'] = discountPrice;
+    _data['discount_price'] = discountPrice;
     _data['formatted_price'] = formattedPrice;
     _data['is_game'] = isGame;
     _data['game'] = game;
-    _data['formatted_discount'] = formattedDiscount;
+   // _data['formatted_discount'] = formattedDiscount;
     _data['image'] = image;
     _data['price'] = price;
     _data['rating'] = rating;

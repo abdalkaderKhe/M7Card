@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class DirectTechnicalSupportChat extends StatefulWidget {
   const DirectTechnicalSupportChat({Key? key}) : super(key: key);
   @override
@@ -9,6 +8,9 @@ class DirectTechnicalSupportChat extends StatefulWidget {
 class _DirectTechnicalSupportChatState extends State<DirectTechnicalSupportChat> {
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
@@ -23,11 +25,11 @@ class _DirectTechnicalSupportChatState extends State<DirectTechnicalSupportChat>
           style: TextStyle(
               fontFamily: "Almarai",
               color: Color.fromRGBO(73, 70, 97, 1),
-              fontSize: 17,
-              fontWeight: FontWeight.w900),
+              fontSize: 15,
+              fontWeight: FontWeight.w800),
         ),
         actions: [
-          IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_forward,size: 30,),color: Color.fromRGBO(133, 116, 231, 1)),
+          IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_forward,size: 22,),color: Color.fromRGBO(133, 116, 231, 1)),
         ],
 
       ),
@@ -39,19 +41,19 @@ class _DirectTechnicalSupportChatState extends State<DirectTechnicalSupportChat>
             //"لديك اسئلة تواصل معنا"
             Container(
               color: const Color.fromRGBO(133, 116, 231, 1),
-              height: 100,
+              height: height / 8,
               width: double.infinity,
               child: const Center(child: Text("لديك اسئلة تواصل معنا",style: TextStyle(
                   fontFamily: "Almarai",
                   color: Colors.white,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w900))),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700))),
             ),
 
             Container(
               child: Expanded(
                 child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+                  padding: EdgeInsets.symmetric(horizontal: width / 50,vertical: height / 20),
                 ),
               )
             ),
@@ -72,7 +74,8 @@ class _DirectTechnicalSupportChatState extends State<DirectTechnicalSupportChat>
 
                   Expanded(
                     child: TextField(
-                      onChanged: (value){
+                      onChanged: (value)
+                      {
 
                       },
                       decoration: const InputDecoration(
@@ -81,19 +84,23 @@ class _DirectTechnicalSupportChatState extends State<DirectTechnicalSupportChat>
                           horizontal: 10,
                         ),
                         hintText: "أكتب رسالتك هنا.....",
+                        hintStyle: TextStyle(fontSize: 14),
                         border: InputBorder.none,
                       ),
 
                     ),
                   ),
 
-                  TextButton(onPressed: (){}, child: const Text("ارسال",style: TextStyle(color: Color.fromRGBO(133, 116, 231, 1),),)),
+                  TextButton(onPressed: (){},
+                      child: const Text("ارسال",style: TextStyle(color: Color.fromRGBO(133, 116, 231, 1),fontSize: 14),),
+                  ),
 
 
                 ],
               ),
 
             ),
+
           ],
         ),
       ),

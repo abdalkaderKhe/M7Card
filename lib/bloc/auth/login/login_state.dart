@@ -14,7 +14,8 @@ class LoginUserNotFoundState extends LoginState {}
 class LoginInvalidCredentialsState extends LoginState {}
 
 class LoginSuccessState extends LoginState {
-  LoginSuccessState();
+  String token;
+  LoginSuccessState({required this.token});
 }
 
 class LoginErrorState extends LoginState {

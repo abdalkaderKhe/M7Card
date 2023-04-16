@@ -39,6 +39,9 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return BlocListener<RegisterBloc, RegisterState>(
       listener: (BuildContext context, state) {
         if (state is RegisterLoadingState) {
@@ -51,55 +54,42 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
           print("=====RegisterErrorState======");
         }
       },
+
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: false,
-          automaticallyImplyLeading : false,
-          actions: [
-            const Center(child: Text("التسجيل",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 17,fontWeight: FontWeight.w900),)),
-            IconButton(onPressed: () {Navigator.of(context).pop();}, icon: const Icon(Icons.arrow_forward,size: 30,),color:const Color.fromRGBO(133, 116, 231, 1)),
-          ],
-        ),
-        body: Stack(
-          children: [
-            const BackGroundColor(),
-            SingleChildScrollView(
+        body: SafeArea(
+          child: Stack(
+            children: [
+              const BackGroundColor(),
+              SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children:  [
+                  children: [
+                    customAppBar(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children:  [
+                        Text("الدخول لحسابك",style: Theme.of(context).textTheme.titleMedium!.copyWith(fontFamily:
+                        "Almarai",color: const Color.fromRGBO(73, 70, 97, 1))),
 
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.15,),
-                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text("الدخول لحسابك",style: Theme.of(context).textTheme.headline5!.copyWith(fontFamily: "Almarai",color: const Color.fromRGBO(73, 70, 97, 1))),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.04,),
-                     Padding(
-                      padding:const  EdgeInsets.symmetric(horizontal: 12),
-                      child: Text("    M7 Card أهلا بك في تطبيق",style: Theme.of(context).textTheme.labelLarge!.copyWith(fontFamily: "Almarai",color: const Color.fromRGBO(73, 70, 97, 1))),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.04,),
-                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text("يرجى كتابة رقم الجوال أو البريد الالكتروني",style: Theme.of(context).textTheme.labelLarge!.copyWith(fontFamily: "Almarai",color: const Color.fromRGBO(73, 70, 97, 1))),
-                    ),
+                        SizedBox(height: height /40),
+                        Text("    M7 Card أهلا بك في تطبيق",style: Theme.of(context).textTheme.
+                        labelLarge!.copyWith(fontFamily: "Almarai",color: const Color.fromRGBO(73, 70, 97, 1))),
 
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.07,),
+                        SizedBox(height: height /40),
+                        Text("يرجى كتابة رقم الجوال أو البريد الالكتروني",style: Theme.of(context).textTheme
+                            .labelLarge!.copyWith(fontFamily: "Almarai",color: const Color.fromRGBO(73, 70, 97, 1))),
 
+                        SizedBox(height: height /30),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 20),
-                      child: Center(
-                        child: Form(
+                        Center(
+                          child: Form(
                             key: _keyForm,
                             child: Column(
                               children: [
                                 SizedBox(
-                                  height: 65,width: 330,
+                                  height: height /17,
+                                  width: width /1.1,
                                   child: TextFormField(
                                     controller: _emailEditingController,
                                     keyboardType:TextInputType.emailAddress,
@@ -108,7 +98,7 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
                                     validator: (text){
                                       if(text!.isNotEmpty){
                                         if (text.length > 5 && text.contains('@') && text.endsWith('.com')) {
-                                            return null;
+                                          return null;
                                         }else{
                                           return "يرجى ادخل عنوان بريد الكتروني صالح";
                                         }
@@ -139,9 +129,11 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 15,),
+
+                                SizedBox(height: height / 40,),
                                 SizedBox(
-                                  height: 65,width: 330,
+                                  height: height /17,
+                                  width: width /1.1,
                                   child: TextFormField(
                                     validator: (text){
                                       if(text!.isNotEmpty){
@@ -181,9 +173,11 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 15,),
+
+                                SizedBox(height: height / 40,),
                                 SizedBox(
-                                  height: 65,width: 330,
+                                  height: height /17,
+                                  width: width /1.1,
                                   child: TextFormField(
                                     validator: (text){
                                       if(text!.isEmpty){
@@ -215,9 +209,11 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 15,),
+
+                                SizedBox(height: height / 40,),
                                 SizedBox(
-                                  height: 65,width: 330,
+                                  height: height /17,
+                                  width: width /1.1,
                                   child: TextFormField(
                                     validator: (text){
                                       if(text!.isEmpty){
@@ -249,11 +245,12 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 15,),
 
-                              BlocBuilder<RegisterBloc, RegisterState>(
-                                builder: (BuildContext context, state){
-                                  if (state is RegisterLoadingState) {
+                                SizedBox(height: height / 30,),
+
+                                BlocBuilder<RegisterBloc, RegisterState>(
+                                  builder: (BuildContext context, state){
+                                    if (state is RegisterLoadingState) {
                                       print("=====RegisterLoadingState======");
                                       return Padding(
                                         padding:
@@ -262,42 +259,39 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
                                           width: double.infinity,
                                           height: 60,
                                           child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              shape: const StadiumBorder(),
-                                              primary: _buttonColor,
-                                            ),
-                                            onPressed: () {},
-                                            child:const Center(child: CircularProgressIndicator(color: Color.fromRGBO(247, 241, 253, 1),),)
+                                              style: ElevatedButton.styleFrom(
+                                                shape: const StadiumBorder(),
+                                                primary: _buttonColor,
+                                              ),
+                                              onPressed: () {},
+                                              child:const Center(child: CircularProgressIndicator(color: Color.fromRGBO(247, 241, 253, 1),),)
                                           ),
                                         ),
                                       );
-                                  }
-                                  if (state is RegisterSuccessCheckMailState) {
-                                    print("=====RegisterSuccessCheckMailState======");
-                                    //WidgetsBinding.instance.addPostFrameCallback((_) => _showMyDialog(message: "تم التسجيل بنجاح تفقد الايميل لتفعيل الحساب"));
-                                    SchedulerBinding.instance.addPostFrameCallback((_){
-                                      Navigator.pushReplacement(context,
-                                        MaterialPageRoute<void>(
-                                          builder: (BuildContext context) => const SigninEmailOrPhonePage(),
-                                        ),
-                                      );
-                                    });
-                                    return const SizedBox();
-                                  }
-                                  if (state is RegisterErrorState) {
-                                    print("=====RegisterErrorState======");
-                                    WidgetsBinding.instance.addPostFrameCallback((_) => _showMyDialog(message: ERROR_OCCURED_AR));
-                                  }
-                                  if (state is RegisterEmailHasAlreadyBeenTakenState) {
-                                    print("=====RegisterErrorState======");
-                                    WidgetsBinding.instance.addPostFrameCallback((_) => _showMyDialog(message: "عنوان البريد الالكتروني موجود مسبقا"));
-                                  }
-                                  return Padding(
-                                    padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 60,
+                                    }
+                                    if (state is RegisterSuccessCheckMailState) {
+                                      print("=====RegisterSuccessCheckMailState======");
+                                      //WidgetsBinding.instance.addPostFrameCallback((_) => _showMyDialog(message: "تم التسجيل بنجاح تفقد الايميل لتفعيل الحساب"));
+                                      SchedulerBinding.instance.addPostFrameCallback((_){
+                                        Navigator.pushReplacement(context,
+                                          MaterialPageRoute<void>(
+                                            builder: (BuildContext context) => const SigninEmailOrPhonePage(),
+                                          ),
+                                        );
+                                      });
+                                      return const SizedBox();
+                                    }
+                                    if (state is RegisterErrorState) {
+                                      print("=====RegisterErrorState======");
+                                      WidgetsBinding.instance.addPostFrameCallback((_) => _showMyDialog(message: ERROR_OCCURED_AR));
+                                    }
+                                    if (state is RegisterEmailHasAlreadyBeenTakenState) {
+                                      print("=====RegisterErrorState======");
+                                      WidgetsBinding.instance.addPostFrameCallback((_) => _showMyDialog(message: "عنوان البريد الالكتروني موجود مسبقا"));
+                                    }
+                                    return SizedBox(
+                                      width: width / 1.2,
+                                      height: height /15,
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           shape: const StadiumBorder(),
@@ -324,6 +318,7 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
                                               child: const Icon(
                                                 Icons.arrow_back,
                                                 color: Colors.white,
+                                                size: 22,
                                               ),
                                             ),
                                             const Text(
@@ -331,30 +326,57 @@ class _CreateAccountWithEmailAndPasswordState extends State<CreateAccountWithEma
                                               style: TextStyle(
                                                   fontFamily: "Almarai",
                                                   color: Colors.white,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.w900),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600),
                                             )
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  );
-                                 },
-                               ),
+                                    );
+                                  },
+                                ),
 
                               ],
                             ),
+                          ),
                         ),
-                      ),
+
+                      ],
                     ),
                   ],
-                ),
+                )
               ),
-          ],
-        ),
+            ],
+          ),
+        )
       ),
     );
   }
+
+  Widget customAppBar()
+  {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    return SizedBox(
+      height: height/20,
+      width: width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_back,size: 25,),
+              color: Color.fromRGBO(133, 116, 231, 1)),
+          Row(
+            children: [
+              const Center(child: Text("التسجيل",style: TextStyle(fontFamily: "Almarai",color: Color.fromRGBO(73, 70, 97, 1),fontSize: 15,fontWeight: FontWeight.w900),)),
+              IconButton(onPressed: () { Navigator.of(context).pop(); }, icon: const Icon(Icons.arrow_forward,size: 25,),color: Color.fromRGBO(133, 116, 231, 1)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   _showMyDialog({required String message}) async {
     return showDialog<void>(
       context: context,
